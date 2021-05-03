@@ -31,10 +31,12 @@ namespace Serialization
 {
     public class PagarMeContractResolver : DefaultContractResolver
     {
+#if (!NET40 && !NETCORE5)
         public PagarMeContractResolver()
             : base(false)
         {
         }
+#endif
 
     }
 }

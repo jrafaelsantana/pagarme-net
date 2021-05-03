@@ -75,7 +75,7 @@ namespace PagarMe
             Body = "{}";
         }
 
-#if !PCL
+#if (!PCL && !NETCORE5)
         public PagarMeResponse Execute()
         {
             return TLS.Instance.UseTLS12IfAvailable(() =>
@@ -146,7 +146,7 @@ namespace PagarMe
                 {
                     var encoding = new UTF8Encoding(false);
 
-#if !PCL
+#if (!PCL && NETCORE5)
                     request.ContentLength = encoding.GetByteCount(Body);
 #else
                     request.Headers["Content-Length"] = encoding.GetByteCount(Body).ToString();
@@ -186,12 +186,16 @@ namespace PagarMe
 
         private HttpWebRequest GetRequest()
         {
+#if NET40
+            HttpWebRequest request = (HttpWebRequest) HttpWebRequest.CreateDefault(GetRequestUri());
+#else
             HttpWebRequest request = WebRequest.CreateHttp(GetRequestUri());
+#endif
             if(!(GetVersionHeader() is null)) {
                 request.Headers["X-PagarMe-Version"] = GetVersionHeader();
             }
 
-#if !PCL
+#if (!PCL && !NETCORE5)
             request.UserAgent = "pagarme-net/" + typeof(PagarMeRequest).Assembly.GetName().Version.ToString();
             request.Headers["X-PagarMe-User-Agent"] = "pagarme-net/" + typeof(PagarMeRequest).Assembly.GetName().Version.ToString();
            

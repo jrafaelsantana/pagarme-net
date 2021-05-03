@@ -50,11 +50,11 @@ namespace PagarMe.Base
 
                 foreach (string name in names)
                 {
-                    #if NET40
+#if NET40
                     var member = type.GetFields().Single(x => x.Name == name);
-                    #elif !PCL
+#elif (!PCL && !NETCORE5)
                     var member = type.GetTypeInfo().GetRuntimeFields().Single((x) => x.Name == name);
-                    #else
+#else
                     var member = type.GetTypeInfo().GetDeclaredField(name);
                     #endif
                     var value = Enum.Parse(type, name);
