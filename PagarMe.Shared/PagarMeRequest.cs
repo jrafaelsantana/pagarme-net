@@ -73,6 +73,11 @@ namespace PagarMe
 
             Query = new List<Tuple<string, string>>();
             Body = "{}";
+
+            if (method == "GET")
+            {
+                Body = null;
+            }
         }
 
 #if (!PCL && !NETCORE5)
